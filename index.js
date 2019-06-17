@@ -1,10 +1,35 @@
 
 const speakersURL = "http://localhost:3000/speakers"
+const enterDiv = document.querySelector('.enter');
 
+// GETS Speakers from API
 fetch(speakersURL)
   .then(res => res.json())
-  .then(res => res.map(speaker => speaker.name))
-  .then(speakers => console.log(speakers));
+  // .then(res => res.map(speaker => speaker.name))
+  .then(speakers => {
+    console.log(speakers)
+    // debugger
+    const selectSpeakerDropdown = document.querySelector('.choose-user')
+
+    for(let i = 0; i < speakers.length; i++) {
+        let opt = speakers[i].name
+        let el = document.createElement('option')
+        el.id = speakers[i].id
+        el.textContent = opt
+        el.value = opt
+        selectSpeakerDropdown.append(el)
+       }
+
+
+selectSpeakerDropdown.addEventListener('change', function(event) {
+  debugger
+  console.log(event.target.id);
+  console.log(event.target.value); //
+   //
+}, false);
+
+  });
+
 
 // Create New Speaker
 const enterForm = document.getElementById('enter-speaker')
