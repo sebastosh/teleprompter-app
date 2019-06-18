@@ -1,38 +1,46 @@
 
-const speakersURL = "http://localhost:3000/speakers"
+const speakersURL = "http://localhost:3000/speakers/"
 const enterDiv = document.querySelector('.enter');
 
 // GETS Speakers from API
 fetch(speakersURL)
-  .then(res => res.json())
-  // .then(res => res.map(speaker => speaker.name))
-  .then(speakers => {
-    console.log(speakers)
-    // debugger
-    const selectSpeakerDropdown = document.querySelector('.choose-user')
+.then(res => res.json())
+// .then(res => res.map(speaker => speaker.name))
+.then(speakers => {
+  console.log(speakers)
+  // debugger
+  const selectSpeakerDropdown = document.querySelector('.choose-user')
 
-    for(let i = 0; i < speakers.length; i++) {
-        let opt = speakers[i].name
-        let el = document.createElement('option')
-        el.id = speakers[i].id
-        el.textContent = opt
-        el.value = opt
-        selectSpeakerDropdown.append(el)
-       }
+  for(let i = 0; i < speakers.length; i++) {
+      let opt = speakers[i].name
+      let el = document.createElement('option')
+      // el.id = speakers[i].id
+      el.textContent = opt
+      el.value = speakers[i].id
+      selectSpeakerDropdown.append(el)
+     }
 
+    selectSpeakerDropdown.addEventListener('change', function(event) {
 
-selectSpeakerDropdown.addEventListener('change', function(event) {
-  debugger
-  console.log(event.target.id);
-  console.log(event.target.value); //
-   //
-}, false);
+      console.log(event.target.value); //
 
-  });
+      const userId = event.target.value
 
+      console.log(userId);
 
-// Create New Speaker
-const enterForm = document.getElementById('enter-speaker')
+        fetch(speakersURL + userId)
+        .then(res => res.json())
+        // .then(res => res.map(speaker => speaker.name))
+        .then(speaker => {
+          console.log(speaker)
+        })
+        
+    }, false);
+
+});
+
+  // Create New Speaker
+  const enterForm = document.getElementById('enter-speaker')
 
   enterForm.addEventListener('submit', (event) => {
     event.preventDefault()
@@ -55,7 +63,7 @@ const enterForm = document.getElementById('enter-speaker')
   })
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log("Hi John, just want you to know that the DOM is LOADED"); //
+  console.log("Hi John, just want you to know the DOM is LOADED"); //
 
 // const signInDiv = document.createElement('div')
 // const signInForm = document.createElement('form')

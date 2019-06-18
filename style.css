@@ -1,7 +1,19 @@
+html {
+  font-family: 'Oswald', sans-serif;
+  color:white;
+  background-image: url("https://cdn1-www.superherohype.com/assets/uploads/2019/03/Talos.jpg");
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover;         /* Generic*/
+}
+
+
 .enter {
-background-color: #4f84b1;
-display: block
-width: 400px;
+background-color: rgba(72, 161, 121, 0.72);
+color: white;
+display: block;
+width: 50%;
 margin: 0 20%;
 text-align: center;
 padding: 10px;
