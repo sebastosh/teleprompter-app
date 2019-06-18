@@ -8,6 +8,9 @@ html {
     background-size: cover;         /* Generic*/
 }
 
+h1 {
+    text-align:center;
+}
 
 .enter {
 background-color: rgba(72, 161, 121, 0.72);

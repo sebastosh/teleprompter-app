@@ -1,5 +1,7 @@
 
 const speakersURL = "http://localhost:3000/speakers/"
+const scriptsURL = "http://localhost:3000/scripts/"
+
 const enterDiv = document.querySelector('.enter');
 
 // GETS Speakers from API
@@ -34,7 +36,7 @@ fetch(speakersURL)
         .then(speaker => {
           console.log(speaker)
         })
-        
+
     }, false);
 
 });
@@ -52,13 +54,18 @@ fetch(speakersURL)
       name: speakerName,
       title: speakerTitle
     }
-
-
-
-
-
-
     console.log(speakerName, speakerTitle); //
+
+    fetch(speakersURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(userData),
+          }).then((res) => res.json())
+          .then((data) =>  console.log(data))
+          .catch((err)=>console.log(err))
 
   })
 
@@ -70,6 +77,47 @@ document.addEventListener('DOMContentLoaded', () => {
 // signinForm.innerHTML = "POOP"
 // signInDiv.append(signInForm)
 
+    //Speaker Show Page
+    function domSpeaker(speaker) {
+      const section = document.getElementsByTagName('section')[0]
+      const speakerDiv = document.createElement("div")
+        div.className = "speaker-show"
+        div.innerHTML = `
+        <h2>${speaker.name}</h2>
+        <h4>${speaker.title}</h4>
+        `
+        // Fetch Get Scripts
+        fetch(scriptsURL)
+        .then(res => res.json())
+        // .then(res => res.map(speaker => speaker.name))
+        .then(scripts => {
+            console.log(scripts)
+            debugger
+            let showScripts = scripts.filter(script => {
+              script.title
+            });
+            // Create & Append Buttons for each Script
+            const editBtn = document.createElement("button")
+            editBtn.innerText = "Edit ✏️"
+            editBtn.dataset.scriptId = script.id
+            editBtn.addEventListener("click",(event) => {
+              console.log("wysiwyg"); // wysiwyg
+            })
+            // div.appendChild(editBtn)
+
+            const promptBtn = document.createElement("button")
+            promptBtn.innerText = "Prompt 📺"
+            promptBtn.dataset.scriptId = script.id
+            promptBtn.addEventListener("click", (event) => {
+              console.log("prompt"); // prompt
+            })
+            // div.appendChild(promptBtn)
+
+        })
+
+        // parentNode.replaceChild(newChild, oldChild);
+    console.log("domSpeaker's Loaded"); //
+    }
 
 
 
