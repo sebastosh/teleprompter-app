@@ -10,15 +10,16 @@ fetch(speakersURL)
 // .then(res => res.map(speaker => speaker.name))
 .then(speakers => {
   console.log(speakers)
+  console.log(speakers.data[0].attributes.name, speakers.data[0].id)
   // debugger
   const selectSpeakerDropdown = document.querySelector('.choose-user')
 
-  for(let i = 0; i < speakers.length; i++) {
-      let opt = speakers[i].name
+  for(let i = 0; i < speakers.data.length; i++) {
+      let opt = speakers.data[i].attributes.name
       let el = document.createElement('option')
       // el.id = speakers[i].id
       el.textContent = opt
-      el.value = speakers[i].id
+      el.value = speakers.data[i].id
       selectSpeakerDropdown.append(el)
      }
 
@@ -62,7 +63,10 @@ fetch(speakersURL)
             'Content-Type': 'application/json',
             'Accept': 'application/json'
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify({
+            name: speakerName,
+            title: speakerTitle
+          }),
           }).then((res) => res.json())
           .then((data) =>  console.log(data))
           .catch((err)=>console.log(err))
