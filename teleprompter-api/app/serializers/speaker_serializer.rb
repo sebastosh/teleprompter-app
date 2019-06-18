@@ -1,5 +1,5 @@
 class SpeakerSerializer
   include FastJsonapi::ObjectSerializer
-  attributes :name, :title
-  has_many :scripts
+  attributes :name, :title, :scripts
+  # has_many :scripts
 end

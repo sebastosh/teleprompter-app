@@ -8,26 +8,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const enterDiv = document.querySelector('.enter');
 
+    //Speaker Show Page
   function domSpeaker(speaker) {
     console.log(speaker); // speaker
 
       const speakerURL = `http://localhost:3000/speakers/${speaker.id}`
       const section = document.getElementsByTagName('section')[0]
       const speakerDiv = document.createElement("div")
+      const speakerName = speaker.data.attributes.name
         speakerDiv.className = "speaker-show"
         speakerDiv.innerHTML = `
-        <h2>${speaker.data.attributes.name}</h2>
+        <h2>${speakerName}</h2>
         <h4>${speaker.data.attributes.title}</h4>
         `
-        debugger
-        // const scriptUl = document.createElement('ul')
-        // scriptUl.innerText = ``
+        // debugger
+        const speakerScripts = speaker.data.attributes.scripts
 
+        const scriptUl = document.createElement('ul')
+        scriptUl.innerText = `${speakerName}'s Speeches`
+        speakerDiv.append(scriptUl)
 
+        speakerScripts.forEach(script => {
+          const scriptLi = document.createElement('li')
+          scriptLi.innerHTML = script.title
+          scriptUl.append(scriptLi)
+            // Create & Append Buttons for each Script
+            const editBtn = document.createElement("button")
+            editBtn.innerText = "Edit ✏️"
+            editBtn.id = script.id
+            editBtn.addEventListener("click",(event) => {
+            console.log(`wysiwyg for ${editBtn.id}`); //
+            wysiwyg()
+            })
+            scriptLi.appendChild(editBtn)
 
+            const promptBtn = document.createElement("button")
+            promptBtn.innerText = "Prompt 📺"
+            promptBtn.id = script.id
+            promptBtn.addEventListener("click", (event) => {
+            console.log(`prompt for ${promptBtn.id}`);
+            prompt()
+            })
+            scriptLi.appendChild(promptBtn)
+        })
         section.replaceChild(speakerDiv, enterDiv);
+
         console.log("domSpeaker's Loaded"); //
+
+        function wysiwyg(){
+          const quillDiv = document.createElement('div')
+          quillDiv.id = "quill"
+          quillDiv.innerHTML = "<h1>SKRULL EDITOR</h1>"
+          section.replaceChild(quillDiv, speakerDiv);
+        }
+
+        function prompt(){
+          const promptDiv = document.createElement('div')
+          promptDiv.id = "prompt"
+          promptDiv.innerHTML = "<h1>TEXT SKRULLER </h1>"
+          section.replaceChild(promptDiv, speakerDiv);
+        }
     }
+
+
+
   // GETS Speakers from API
   fetch(speakersURL)
   .then(res => res.json())
@@ -97,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   })
 
-    //Speaker Show Page
+
 
 
 
