@@ -20,12 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
         <h3>${speaker.data.attributes.title}</h3>
         `
         const newBtn = document.createElement("button")
-        newBtn.innerText = "New 📜"
+        newBtn.innerText = "New Script 📜"
+        newBtn.id = speaker.data.id
         newBtn.addEventListener("click",(event) => {
-        console.log(`wysiwyg for new script`); //
-        wysiwyg(event)
-        })
+        console.log(`wysiwyg for ${newBtn.id}`); //
+        wysiwygNew(event)
 
+        })
+        speakerDiv.append(newBtn)
         // debugger
         const speakerScripts = speaker.data.attributes.scripts
 
@@ -46,19 +48,106 @@ document.addEventListener('DOMContentLoaded', () => {
             wysiwyg(event)
 
             })
+            scriptLi.appendChild(editBtn)
 
             const promptBtn = document.createElement("button")
             promptBtn.innerText = "Prompt 📺"
             promptBtn.id = script.id
             promptBtn.addEventListener("click", (event) => {
             console.log(`prompt for ${promptBtn.id}`);
-            prompt()
+            prompt(script)
             })
-            scriptLi.appendChild(editBtn, promptBtn)
+            scriptLi.appendChild(promptBtn)
         })
         section.replaceChild(speakerDiv, enterDiv);
 
         console.log("domSpeaker and scripts Loaded"); //
+
+          // New Script with POST to api
+          function wysiwygNew(){
+              console.log(`New Script #${event.currentTarget.id}`); //
+debugger
+              const scriptId = event.currentTarget.id
+
+            const quillDiv = document.createElement('div')
+              const toolDiv = document.createElement('div')
+                toolDiv.id = "toolbar"
+              const editorDiv = document.createElement('div')
+                editorDiv.id = "editor"
+              const saveDeltaBtn = document.createElement('button')
+                saveDeltaBtn.id = scriptId
+                saveDeltaBtn.innerText = "💾"
+
+              quillDiv.append(toolDiv, editorDiv, saveDeltaBtn)
+              section.replaceChild(quillDiv, speakerDiv);
+
+              // GET fetch script and place in quill Editor
+              const scriptURL = `http://localhost:3000/scripts/${scriptId}`
+              fetch(scriptURL)
+              .then(res => res.json())
+              .then(script => {
+                console.log(script); //
+                quill.setText(`${script.content}\n`)
+              })
+
+            // SAVE Content to API
+            saveDeltaBtn.addEventListener('click', function(event){
+              const target = event.target
+
+              const scriptURL = `http://localhost:3000/scripts`
+
+              console.log("saveDeltaBtn Clicked!!")
+              // delta variable is what gets saved to the db as a json object
+              let delta = quill.getText();
+              console.log(delta)
+
+                  fetch(scriptURL, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      content: delta
+                    })
+                  })
+                  .then(res => res.json())
+                  .then(script => {
+                    console.log(script)
+                      // // editorDiv.innerHTML = script.data.attributes.content
+                      // const delta = script.data.attributes.content
+                      // quill.setContents(delta);
+                      // debugger
+                  })
+            })
+
+            // Quill Editor Options and Invoke
+              const toolbarOptions = [
+               [{ 'header': [1,2,3,4,5,6, false] }],
+               [{'font': [] }],
+               ['bold', 'italic', 'underline', 'strike'],
+               [{'align': [] }],
+               [{'color': [] }, {'background': [] }],
+               [{'list': 'ordered' }, {'list': 'bullet' }],
+               [{'indent': '-1'},{'indent': '+1'}],
+               ['code-block'],
+               ['link'],
+               ['image', 'video']
+              ];
+
+               const quill = new Quill('#editor', {
+                   modules: {
+                       toolbar: toolbarOptions
+                   },
+                   theme: 'snow'
+               });
+
+
+
+
+          // End wysiwyg function
+          }
+
 
         function wysiwyg(){
             console.log(`Editing Script #${event.currentTarget.id}`); //
@@ -146,11 +235,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-        function prompt(){
+        function prompt(script){
         const promptDiv = document.createElement('div')
         promptDiv.id = "prompt"
-        promptDiv.innerHTML = "<h1>TEXT SKRULLER </h1>"
+        promptDiv.innerHTML = `
+<h1>${script.title} </h1>
+<marquee behavior="scroll" direction="up" scrollamount=1 id="mymarquee">
+<p>${script.content}</p>
+</marquee>
+`
         section.replaceChild(promptDiv, speakerDiv);
+          // console.log(script.content)
+          // const promptTxt = document.createElement("p")
+          // promptTxt.innerText = script.content
+          // promptDiv.innerHTML += promptTxt
+          marquee = document.getElementById('mymarquee')
+          window.addEventListener('keydown', (event) => {
+          const keyCode = event.code
+          console.log(keyCode)
+          let sAmount = marquee.scrollAmount
+          if (keyCode === 'Space'){
+          marquee.stop()
+          }
+          if (keyCode === 'KeyV'){
+          marquee.start()
+          }
+          if (keyCode === 'ArrowUp'){
+          marquee.setAttribute('direction', 'up');
+          }
+          if (keyCode === 'ArrowDown'){
+          marquee.setAttribute('direction', 'down');
+          }
+          if (keyCode === 'ArrowLeft'){
+          sAmount -= 1
+          marquee.setAttribute('scrollamount', sAmount);
+          }
+          if (keyCode === 'ArrowRight'){
+          sAmount += 1
+          marquee.setAttribute('scrollamount', sAmount);
+          }
+          if (keyCode === 'Escape'){
+          console.log(script.speaker_id)
+
+          }
+          })
+
+
       }
     }
 
