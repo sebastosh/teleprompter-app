@@ -53,29 +53,77 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         section.replaceChild(speakerDiv, enterDiv);
 
-        console.log("domSpeaker's Loaded"); //
+        console.log("domSpeaker and scripts Loaded"); //
 
         function wysiwyg(){
+            console.log("UNO"); //
+          // const target = event.target
+          //   const scriptURL = `http://localhost:3000/scripts/${target.id}`
+          //   fetch(scriptURL)
+          //   .then(res => res.json())
+          //   .then(script => {
+          //     console.log(script.data.attributes.content)
+          //       // editorDiv.innerHTML = script.data.attributes.content
+          //       const delta = script.data.attributes.content
+          //       quill.setContents(delta);
+          //       debugger
+          //   })
+
+
+
+         console.log("DOS"); //
           const quillDiv = document.createElement('div')
-          quillDiv.id = "quill"
-          quillDiv.innerHTML = "<h1>SKRULL EDITOR</h1>"
+          const toolDiv = document.createElement('div')
+            toolDiv.id = "toolbar"
+          const editorDiv = document.createElement('div')
+            editorDiv.id = "editor"
+          quillDiv.append(toolDiv, editorDiv)
           section.replaceChild(quillDiv, speakerDiv);
+
+            const toolbarOptions = [
+             [{ 'header': [1,2,3,4,5,6, false] }],
+             [{'font': [] }],
+             ['bold', 'italic', 'underline', 'strike'],
+             [{'align': [] }],
+             [{'color': [] }, {'background': [] }],
+             [{'list': 'ordered' }, {'list': 'bullet' }],
+             [{'indent': '-1'},{'indent': '+1'}],
+             ['code-block'],
+             ['link'],
+             ['image', 'video']
+            ];
+
+             const quill = new Quill('#editor', {
+                 modules: {
+                     toolbar: toolbarOptions
+                 },
+                 theme: 'snow'
+             });
+
+             // const button = document.querySelector('#saveDelta')
+             // button.addEventListener('click', function(event){
+             //
+             //     console.log("Clicked !!")
+             //     // delta variable is what gets saved to the db as a json object
+             //     let delta = quill.getContents();
+             //     console.log(delta)
+             //     debugger
+             // })
+
+
         }
 
-        function prompt(){
-          const promptDiv = document.createElement('div')
-          promptDiv.id = "prompt"
-          promptDiv.innerHTML = "<h1>TEXT SKRULLER </h1>"
-          section.replaceChild(promptDiv, speakerDiv);
-        }
+    function prompt(){
+        const promptDiv = document.createElement('div')
+        promptDiv.id = "prompt"
+        promptDiv.innerHTML = "<h1>TEXT SKRULLER </h1>"
+        section.replaceChild(promptDiv, speakerDiv);
+      }
     }
-
-
 
   // GETS Speakers from API
   fetch(speakersURL)
   .then(res => res.json())
-  // .then(res => res.map(speaker => speaker.name))
   .then(speakers => {
     console.log(speakers)
     console.log(speakers.data[0].attributes.name, speakers.data[0].id)
@@ -112,8 +160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Create New Speaker
   const enterForm = document.getElementById('enter-speaker')
-
-  enterForm.addEventListener('submit', (event) => {
+        enterForm.addEventListener('submit', (event) => {
     event.preventDefault()
 
     const speakerName = event.target.name.value
@@ -141,8 +188,5 @@ document.addEventListener('DOMContentLoaded', () => {
 
   })
 
-
-
-
-
-})
+// END OF DOMContentLoaded
+});

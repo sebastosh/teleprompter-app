@@ -21,3 +21,13 @@ margin: 0 20%;
 text-align: center;
 padding: 10px;
 }
+
+.ql-toolbar.ql-snow {
+  background-color: #f5f5f587;
+}
+
+.ql-container {
+  background-color: black;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 48px;
+}
