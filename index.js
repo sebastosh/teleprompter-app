@@ -19,6 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
         <h2>${speakerName}</h2>
         <h3>${speaker.data.attributes.title}</h3>
         `
+        const newBtn = document.createElement("button")
+        editBtn.innerText = "New 📜"
+        editBtn.id = script.id
+        editBtn.addEventListener("click",(event) => {
+        console.log(`wysiwyg for ${editBtn.id}`); //
+        wysiwyg(event)
+
+        })
+
         // debugger
         const speakerScripts = speaker.data.attributes.scripts
 
@@ -39,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
             wysiwyg(event)
 
             })
-            scriptLi.appendChild(editBtn)
 
             const promptBtn = document.createElement("button")
             promptBtn.innerText = "Prompt 📺"
@@ -48,45 +56,48 @@ document.addEventListener('DOMContentLoaded', () => {
             console.log(`prompt for ${promptBtn.id}`);
             prompt()
             })
-            scriptLi.appendChild(promptBtn)
+            scriptLi.appendChild(editBtn, promptBtn)
         })
         section.replaceChild(speakerDiv, enterDiv);
 
         console.log("domSpeaker and scripts Loaded"); //
 
         function wysiwyg(){
-            console.log("UNO"); //
+            console.log(`Editing Script #${event.currentTarget.id}`); //
+
             const scriptId = event.currentTarget.id
 
-
-
-         console.log("DOS"); //
           const quillDiv = document.createElement('div')
-          const toolDiv = document.createElement('div')
-            toolDiv.id = "toolbar"
-          const editorDiv = document.createElement('div')
-            editorDiv.id = "editor"
-          const saveDeltaBtn = document.createElement('button')
-            saveDeltaBtn.id = scriptId
-            saveDeltaBtn.innerText = "Save 💾"
+            const toolDiv = document.createElement('div')
+              toolDiv.id = "toolbar"
+            const editorDiv = document.createElement('div')
+              editorDiv.id = "editor"
+            const saveDeltaBtn = document.createElement('button')
+              saveDeltaBtn.id = scriptId
+              saveDeltaBtn.innerText = "💾"
 
-          quillDiv.append(toolDiv, editorDiv, saveDeltaBtn)
-          section.replaceChild(quillDiv, speakerDiv);
+            quillDiv.append(toolDiv, editorDiv, saveDeltaBtn)
+            section.replaceChild(quillDiv, speakerDiv);
 
-          // const saveDelta = document.querySelector('#saveDelta')
+            // GET fetch script and place in quill Editor
+            const scriptURL = `http://localhost:3000/scripts/${scriptId}`
+            fetch(scriptURL)
+            .then(res => res.json())
+            .then(script => {
+              console.log(script); //
+              quill.setText(`${script.content}\n`)
+            })
+
+          // SAVE Content to API
           saveDeltaBtn.addEventListener('click', function(event){
             const target = event.target
-            // debugger
+
             const scriptURL = `http://localhost:3000/scripts/${target.id}`
 
-            console.log("Clicked !!")
+            console.log("saveDeltaBtn Clicked!!")
             // delta variable is what gets saved to the db as a json object
-            let delta = quill.getContents();
-            console.log(delta.ops[0].insert)
-
-            const deltaString = JSON.stringify(delta, null, 2)
-
-            console.log(deltaString); //
+            let delta = quill.getText();
+            console.log(delta)
 
                 fetch(scriptURL, {
                   method: 'PATCH',
@@ -95,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Accept': 'application/json'
                   },
                   body: JSON.stringify({
-                    content: `<p>${delta.ops[0].insert}</p>`
+                    content: delta
                   })
                 })
                 .then(res => res.json())
@@ -106,12 +117,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     // quill.setContents(delta);
                     // debugger
                 })
-
           })
 
-
-
-
+          // Quill Editor Options and Invoke
             const toolbarOptions = [
              [{ 'header': [1,2,3,4,5,6, false] }],
              [{'font': [] }],
@@ -131,6 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
                  },
                  theme: 'snow'
              });
+
+
 
 
         // End wysiwyg function
