@@ -1,14 +1,12 @@
-
-
 document.addEventListener('DOMContentLoaded', () => {
   console.log("Hi John, just want you to know the DOM is LOADED"); //
 
-  const speakersURL = "http://localhost:3000/speakers/"
-  // const scriptsURL = "http://localhost:3000/scripts/"
+    const speakersURL = "http://localhost:3000/speakers/"
+    const scriptsURL = "http://localhost:3000/scripts/"
 
-  const enterDiv = document.querySelector('.enter');
+    const enterDiv = document.querySelector('.enter');
 
-    //Speaker Show Page
+  //Speaker Show Page
   function domSpeaker(speaker) {
     console.log(speaker); // speaker
 
@@ -19,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
         speakerDiv.className = "speaker-show"
         speakerDiv.innerHTML = `
         <h2>${speakerName}</h2>
-        <h4>${speaker.data.attributes.title}</h4>
+        <h3>${speaker.data.attributes.title}</h3>
         `
         // debugger
         const speakerScripts = speaker.data.attributes.scripts
@@ -38,7 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
             editBtn.id = script.id
             editBtn.addEventListener("click",(event) => {
             console.log(`wysiwyg for ${editBtn.id}`); //
-            wysiwyg()
+            wysiwyg(event)
+
             })
             scriptLi.appendChild(editBtn)
 
@@ -57,17 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         function wysiwyg(){
             console.log("UNO"); //
-          // const target = event.target
-          //   const scriptURL = `http://localhost:3000/scripts/${target.id}`
-          //   fetch(scriptURL)
-          //   .then(res => res.json())
-          //   .then(script => {
-          //     console.log(script.data.attributes.content)
-          //       // editorDiv.innerHTML = script.data.attributes.content
-          //       const delta = script.data.attributes.content
-          //       quill.setContents(delta);
-          //       debugger
-          //   })
+            const scriptId = event.currentTarget.id
 
 
 
@@ -77,8 +66,51 @@ document.addEventListener('DOMContentLoaded', () => {
             toolDiv.id = "toolbar"
           const editorDiv = document.createElement('div')
             editorDiv.id = "editor"
-          quillDiv.append(toolDiv, editorDiv)
+          const saveDeltaBtn = document.createElement('button')
+            saveDeltaBtn.id = scriptId
+            saveDeltaBtn.innerText = "Save 💾"
+
+          quillDiv.append(toolDiv, editorDiv, saveDeltaBtn)
           section.replaceChild(quillDiv, speakerDiv);
+
+          // const saveDelta = document.querySelector('#saveDelta')
+          saveDeltaBtn.addEventListener('click', function(event){
+            const target = event.target
+            // debugger
+            const scriptURL = `http://localhost:3000/scripts/${target.id}`
+
+            console.log("Clicked !!")
+            // delta variable is what gets saved to the db as a json object
+            let delta = quill.getContents();
+            console.log(delta.ops[0].insert)
+
+            const deltaString = JSON.stringify(delta, null, 2)
+
+            console.log(deltaString); //
+
+                fetch(scriptURL, {
+                  method: 'PATCH',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                  },
+                  body: JSON.stringify({
+                    content: `<p>${delta.ops[0].insert}</p>`
+                  })
+                })
+                .then(res => res.json())
+                .then(script => {
+                  console.log(script)
+                    // // editorDiv.innerHTML = script.data.attributes.content
+                    // const delta = script.data.attributes.content
+                    // quill.setContents(delta);
+                    // debugger
+                })
+
+          })
+
+
+
 
             const toolbarOptions = [
              [{ 'header': [1,2,3,4,5,6, false] }],
@@ -100,20 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
                  theme: 'snow'
              });
 
-             // const button = document.querySelector('#saveDelta')
-             // button.addEventListener('click', function(event){
-             //
-             //     console.log("Clicked !!")
-             //     // delta variable is what gets saved to the db as a json object
-             //     let delta = quill.getContents();
-             //     console.log(delta)
-             //     debugger
-             // })
 
-
+        // End wysiwyg function
         }
 
-    function prompt(){
+
+
+        function prompt(){
         const promptDiv = document.createElement('div')
         promptDiv.id = "prompt"
         promptDiv.innerHTML = "<h1>TEXT SKRULLER </h1>"
