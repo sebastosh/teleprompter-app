@@ -20,12 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
         <h3>${speaker.data.attributes.title}</h3>
         `
         const newBtn = document.createElement("button")
-        editBtn.innerText = "New 📜"
-        editBtn.id = script.id
-        editBtn.addEventListener("click",(event) => {
-        console.log(`wysiwyg for ${editBtn.id}`); //
+        newBtn.innerText = "New 📜"
+        newBtn.addEventListener("click",(event) => {
+        console.log(`wysiwyg for new script`); //
         wysiwyg(event)
-
         })
 
         // debugger
@@ -54,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
             promptBtn.id = script.id
             promptBtn.addEventListener("click", (event) => {
             console.log(`prompt for ${promptBtn.id}`);
-            prompt(script)
+            prompt()
             })
             scriptLi.appendChild(editBtn, promptBtn)
         })
@@ -146,50 +144,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // End wysiwyg function
         }
 
-    function prompt(script){
+
+
+        function prompt(){
         const promptDiv = document.createElement('div')
         promptDiv.id = "prompt"
-        promptDiv.innerHTML = `
-        <h1>${script.title} </h1>
-        <marquee behavior="scroll" direction="up" scrollamount=1 id="mymarquee">
-        <p>${script.content}</p>
-        </marquee>
-        `
+        promptDiv.innerHTML = "<h1>TEXT SKRULLER </h1>"
         section.replaceChild(promptDiv, speakerDiv);
-        // console.log(script.content)
-        // const promptTxt = document.createElement("p")
-        // promptTxt.innerText = script.content
-        // promptDiv.innerHTML += promptTxt
-        marquee = document.getElementById('mymarquee')
-        window.addEventListener('keydown', (event) => {
-          const keyCode = event.code
-          console.log(keyCode)
-          let sAmount = marquee.scrollAmount
-          if (keyCode === 'Space'){
-            marquee.stop()
-          }
-          if (keyCode === 'KeyV'){
-            marquee.start()
-          }
-          if (keyCode === 'ArrowUp'){
-            marquee.setAttribute('direction', 'up');
-          }
-          if (keyCode === 'ArrowDown'){
-            marquee.setAttribute('direction', 'down');
-          }
-          if (keyCode === 'ArrowLeft'){
-            sAmount -= 1
-            marquee.setAttribute('scrollamount', sAmount);
-          }
-          if (keyCode === 'ArrowRight'){
-            sAmount += 1
-            marquee.setAttribute('scrollamount', sAmount);
-          }
-          if (keyCode === 'Escape'){
-            console.log(script.speaker_id)
-
-          }
-        })
       }
     }
 
