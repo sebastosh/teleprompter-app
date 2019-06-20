@@ -92,6 +92,8 @@ document.addEventListener('DOMContentLoaded', () => {
           section.replaceChild(speakerDiv, firstDiv);
         } else if (firstDiv.className === 'edit-quill-div') {
           section.replaceChild(speakerDiv, firstDiv);
+        } else if (firstDiv.className === 'quill-div') {
+          section.replaceChild(speakerDiv, firstDiv);
         }
 
         console.log("domSpeaker and scripts Loaded"); //
@@ -100,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
         function wysiwygNew(){
               console.log(`New Script Speaker #${event.currentTarget.id}`); //
 //
-              document.querySelector('h1').remove()
               const speakerId = event.currentTarget.id
               var today = Date.now()
 
@@ -136,6 +137,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 })
 
+                const backBtn = document.createElement('button')
+                backBtn.innerText = "ⓧ"
+                backBtn.id = speakerId
+                userId = backBtn.id
+
+                backBtn.addEventListener('click', function(event) {
+
+                  console.log("BACKKKKKKK"); //
+
+                  fetch(speakersURL + userId)
+                  .then(res => res.json())
+                  .then(speaker => {
+                    // debugger
+                    domSpeaker(speaker)
+                  })
+
+                })
+
+
+
               const saveDeltaBtn = document.createElement('button')
                   saveDeltaBtn.id = speakerId
                   saveDeltaBtn.className = 'save-delta'
@@ -154,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
               const editorDiv = document.createElement('div')
                 editorDiv.id = "editor"
 
-              quillDiv.append(titleDiv, saveDeltaBtn, toolDiv, editorDiv)
+              quillDiv.append(titleDiv, saveDeltaBtn,backBtn, toolDiv, editorDiv)
               // quillDiv.append(saveDeltaBtn,promptBtn, toolDiv, editorDiv)
               section.replaceChild(quillDiv, speakerDiv);
 
@@ -381,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
         promptDiv.id = "prompt"
         promptDiv.innerHTML = `
         <div class="prompt">
-          <marquee behavior="scroll" direction="up" scrollamount=3 id="mymarquee" startVisible: true>
+          <marquee behavior="scroll" direction="up" scrollamount=8 id="mymarquee" startVisible=true >
           <p>${script.content}</p>
           </marquee>
           </div>
