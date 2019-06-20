@@ -12,6 +12,7 @@ class ScriptsController < ApplicationController
 
    def create
      script = Script.create(script_params)
+     render json: script
    end
 
    def update
@@ -20,10 +21,15 @@ class ScriptsController < ApplicationController
      render json: script
    end
 
+   def destroy
+     script = Script.find_by(id: params[:id])
+     script.destroy
+   end
+
 
    private
    def script_params
-     params.require(:script).permit(:title, :content)
+     params.require(:script).permit(:title, :content, :speaker_id)
    end
 
 end
