@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
          if (firstDiv.className === 'enter') {
           section.replaceChild(speakerDiv, enterDiv);
+          document.querySelector('h1').remove()
         } else if (firstDiv.id === 'prompt') {
           section.replaceChild(speakerDiv, firstDiv);
         } else if (firstDiv.className === 'edit-quill-div') {
@@ -155,21 +156,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 })
 
-
-
               const saveDeltaBtn = document.createElement('button')
                   saveDeltaBtn.id = speakerId
                   saveDeltaBtn.className = 'save-delta'
                   saveDeltaBtn.innerText = "💾"
 
-              // const promptBtn = document.createElement("button")
-              // promptBtn.innerText = "Prompt 📺"
-              // promptBtn.className = 'save-delta'
-              // promptBtn.id = script.id
-              // promptBtn.addEventListener("click", (event) => {
-              // console.log(`prompt for ${promptBtn.id}`);
-              //   prompt(script)
-              // })
               const toolDiv = document.createElement('div')
                 toolDiv.id = "toolbar"
               const editorDiv = document.createElement('div')
@@ -188,10 +179,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
               console.log("saveDeltaBtn Clicked!!")
 
+
+
               //let scriptTitle =
               // delta variable is what gets saved to the db as a json object
-              let delta = quill.getText();
+              let delta = quill.root.innerHTML;
               console.log(delta)
+
 
                   // POST New Script
                   fetch(scriptURL, {
@@ -225,7 +219,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Quill Editor Options and Invoke
             const toolbarOptions = [
              [{ 'header': [1,2,3,4,5,6, false] }],
-             [{'font': [] }],
+             [{ 'size': ['14px', '16px', '18px'] }],
              ['bold', 'italic', 'underline', 'strike'],
              [{'align': [] }],
              [{'color': [] }, {'background': [] }],
@@ -301,6 +295,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
             })
 
+            const promptBtn = document.createElement("button")
+            promptBtn.innerText = "📺"
+            promptBtn.id = scriptId
+            promptBtn.addEventListener("click", (event) => {
+            console.log(`prompt for ${promptBtn.id}`);
+              prompt(script)
+            })
+
 
 
             const toolDiv = document.createElement('div')
@@ -311,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
               saveDeltaBtn.id = scriptId
               saveDeltaBtn.innerText = "💾"
 
-            quillDiv.append(titleDiv, saveDeltaBtn, backBtn, toolDiv, editorDiv)
+            quillDiv.append(titleDiv, saveDeltaBtn, promptBtn, backBtn, toolDiv, editorDiv)
 
 
             const firstDiv = document.querySelector('div')
@@ -332,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(res => res.json())
             .then(script => {
               console.log(script); //
-              quill.setText(`${script.content}\n`)
+              quill.root.innerHTML = `${script.content}\n`
             })
 
           // SAVE Content to API
@@ -344,7 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             console.log("saveDeltaBtn Clicked!!")
             // delta variable is what gets saved to the db as a json object
-            let delta = quill.getText();
+            let delta = quill.rootinnerHTML;
             // let delta = quill.getContents();
             console.log(delta)
 
@@ -402,30 +404,49 @@ document.addEventListener('DOMContentLoaded', () => {
         promptDiv.id = "prompt"
         promptDiv.innerHTML = `
         <div class="prompt">
-          <marquee behavior="scroll" direction="up" scrollamount=8 id="mymarquee" startVisible=true >
+          <marquee behavior="scroll" direction="up" scrollamount=8 id="mymarquee" startVisible=true style="margin-top: -value" >
           <p>${script.content}</p>
           </marquee>
           </div>
           `
-        section.replaceChild(promptDiv, speakerDiv);
-          const backBtn = document.createElement('button')
-          backBtn.innerText = "ⓧ"
-          backBtn.id = script.speaker_id
-          userId = backBtn.id
-          promptDiv.prepend(backBtn)
+        // section.replaceChild(promptDiv, speakerDiv);
 
-          backBtn.addEventListener('click', function(event) {
+        const firstDiv = document.querySelector('div')
 
-            console.log("BACKKKKKKK"); //
+         if (firstDiv.className === 'enter') {
+          section.replaceChild(promptDiv, enterDiv);
+        } else if (firstDiv.className === 'speaker-show') {
+          section.replaceChild(promptDiv, firstDiv);
+        } else if (firstDiv.className === 'edit-quill-div') {
+          section.replaceChild(promptDiv, firstDiv);
+        } else if (firstDiv.className === 'quill-div') {
+          section.replaceChild(promptDiv, firstDiv);
+        }
 
-            fetch(speakersURL + userId)
-            .then(res => res.json())
-            .then(speaker => {
-              // debugger
-              domSpeaker(speaker)
-            })
+          // triangle
+          // <div class="triangle triangle-3"></div>
 
-          })
+          const triangle = document.createElement('div')
+                triangle.className = "triangle"
+
+          const marqueeDiv = document.querySelector('marquee')
+
+
+          userId = script.speaker_id
+          promptDiv.prepend(triangle)
+
+
+          // document.onkeydown = function(evt) {
+          //     evt = evt || window.event;
+          //     if (evt.keyCode == 27) {
+          //       fetch(speakersURL + userId)
+          //       .then(res => res.json())
+          //       .then(speaker => {
+          //         // debugger
+          //         domSpeaker(speaker)
+          //       })
+          //     }
+          // };
 
           marquee = document.getElementById('mymarquee')
           window.addEventListener('keydown', (event) => {
@@ -454,7 +475,12 @@ document.addEventListener('DOMContentLoaded', () => {
           }
           if (keyCode === 'Escape'){
             // debugger
-          wysiwyg(script)
+            fetch(speakersURL + userId)
+            .then(res => res.json())
+            .then(speaker => {
+              // debugger
+              domSpeaker(speaker)
+            })
           }
           })
 

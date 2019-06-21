@@ -48,7 +48,6 @@ select {
 	padding: 15px;
 	height: 25px;
 	cursor: pointer;
-	background: url(http://sharpik.com/wip/cuteselect/arrow.png) 295px 12px no-repeat white;
 }
 
 select:hover {
@@ -71,12 +70,6 @@ select option:hover {
 	width: 270px;
 	color: #EC6F66;
 }
-
-
-
-
-
-
 
 
 #enter-speaker input{
@@ -109,17 +102,16 @@ margin: 20px auto 5px;
 background-color: rgba(115, 85, 115, 0.75);
 width: 80%;
   margin: 0 auto;
-  padding: 0 25px;
+  padding: 5px 0 15px;
   text-align: center
 }
 
 .speaker-show ul {
   margin: 0;
-
   padding-inline-start: 0px;
 }
 .speaker-show ul li {
-    padding: 20px;
+    padding: 5px;
   list-style-type: none;
 }
 
@@ -129,6 +121,7 @@ width: 80%;
 }
 
 input{
+	  font-family: 'Oswald', sans-serif;
 	border: none;
   color: white;
   background-color:#ffffff00;
@@ -157,6 +150,25 @@ button {
   border: none;
   background-color: #ffffff00;
   color: white;
-  margin: 5px;
-  font-size: .8em;
+  font-size: 1.4em;
+}
+
+button .back-prompt{
+  border: none;
+  background-color: #ffffff00;
+  color: white;
+	  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.4em;
+}
+
+.triangle {
+position: absolute;
+  top: 10em;
+  left: 0;
+  width: 60px;
+  border-bottom: solid 30px rgba(255, 255, 255, 0);
+  border-left: solid 30px white;
+  border-top: solid 30px transparent;
 }
