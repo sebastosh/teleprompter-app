@@ -649,7 +649,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   const target = event.target;
                   const scriptTitle = document.querySelector(".script-title").innerText;
                   //
-                  // const scriptURL = `http://localhost:3000/scripts`;
+                  const scriptURL = `http://localhost:3000/scripts`;
 
                   console.log("saveDeltaBtn Clicked!!");
 
@@ -674,7 +674,8 @@ document.addEventListener("DOMContentLoaded", () => {
                       return response.json();
                     })
                     .then(script => {
-                      wysiwyg(script);
+                      console.log('script: ', script);
+                      // wysiwyg(script);
                     });
                 });
 

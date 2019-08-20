@@ -119,14 +119,6 @@ padding: 5px 10px;
 font-size: 2em;
 }
 
-input{
-  font-family: 'Oswald', sans-serif;
-border: none;
-color: white;
-background-color:#ffffff00;
-width: 100%;
-font-size: 2em;
-}
 
 .scripts-list {
        padding: 0 60px 5px;  
@@ -158,6 +150,21 @@ right: 10px;
 font-size: 1.4em;
 }
 
+.quill-div {
+padding: 0 60px 5px; 
+}
+
+input{
+  margin: 15px 0 0 0 ;
+font-family: 'Oswald', sans-serif;
+border: none;
+color: gray;
+background-color:#fff;
+  border: 1px solid white;
+width: 100%;
+font-size: 1em;
+  line-height: 1.2em;
+}
 
 
 .ql-toolbar.ql-snow {

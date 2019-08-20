@@ -29,7 +29,7 @@ class ScriptsController < ApplicationController
   
      private
      def script_params
-       params.require(:script).permit(:title, :content, :speaker_id)
+       params.require(:script).permit(:title, :content)
      end
   
   end
