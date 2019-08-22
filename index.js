@@ -19,10 +19,10 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     scriptsDiv.append(newBtn);
 
+      // Scripts List Mapped from Data
     const scriptUl = document.createElement("ul");
     scriptsDiv.append(scriptUl);
 
-    // Scripts List
     scriptData.forEach(script => {
       const scriptLi = document.createElement("li");
       scriptLi.innerText = script.title;
@@ -54,21 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
           method: "DELETE"
         })
           .then(response => {
-            console.log('response: ', response);
+            console.log("response: ", response);
 
             const firstDiv = document.querySelector("div");
-            console.log('firstDiv: ', firstDiv);
-          
-          
-         
-            
+            console.log("firstDiv: ", firstDiv);
+
             fetch(scriptsURL)
-            .then(res => res.json())
-            // .then(res => res.map(speaker => speaker.name))
-            .then(scriptData => {
-              slapScriptsOnDom(scriptData);
-            });
-        
+              .then(res => res.json())
+              // .then(res => res.map(speaker => speaker.name))
+              .then(scriptData => {
+                slapScriptsOnDom(scriptData);
+              });
           })
           .catch(error => {
             console.error(error);
@@ -78,28 +74,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
       scriptLi.append(promptBtn, deleteBtn);
     });
-    body.append(scriptsDiv);
 
     const triangle = document.createElement("div");
     triangle.id = "triangle";
     triangle.className = "triangle";
-    body.append(triangle);
+    scriptsDiv.append(triangle);
 
     const firstDiv = document.querySelector("div");
-
-    // Coming back from Wysiwig
-    if (firstDiv.className === "quill-div") {
-      document.getElementsByClassName("quill-div")[0].remove();
-    }
-
+    console.log('firstDiv: ', firstDiv);
+ 
+    if (firstDiv.className === 'enter') {
+     body.replaceChild(scriptsDiv, firstDiv);
+   } else if (firstDiv.id === 'prompt') {
+     body.replaceChild(scriptsDiv, firstDiv);
+   } else if (firstDiv.className === 'edit-div') {
+     body.replaceChild(scriptsDiv, firstDiv);
+   } else { body.append(scriptsDiv);}
+ 
     console.log("domSpeaker and scripts Loaded"); //
 
     // POST script to api
     function wysiwygNew() {
       var today = Date.now();
 
-      const quillDiv = document.createElement("div");
-      quillDiv.className = "quill-div";
+      const editDiv = document.createElement("div");
+      editDiv.className = "edit-div";
 
       const titleDiv = document.createElement("div");
       titleDiv.className = "script-title";
@@ -113,14 +112,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const editTitle = document.createElement("input");
         editTitle.type = "text";
         editTitle.value = titleDiv.innerText;
-        quillDiv.replaceChild(editTitle, titleDiv);
+        editDiv.replaceChild(editTitle, titleDiv);
         editTitle.addEventListener(
           "keyup",
           function(e) {
             if (e.keyCode === 13) {
               console.log("Return Keyup!"); //
               titleDiv.innerText = editTitle.value;
-              quillDiv.replaceChild(titleDiv, editTitle);
+              editDiv.replaceChild(titleDiv, editTitle);
             }
           },
           false
@@ -131,13 +130,14 @@ document.addEventListener("DOMContentLoaded", () => {
           function(e) {
             console.log("blurred"); //
             titleDiv.innerText = editTitle.value;
-            quillDiv.replaceChild(titleDiv, editTitle);
+            editDiv.replaceChild(titleDiv, editTitle);
           },
           false
         );
       });
 
-
+      const buttonDiv = document.createElement("div");
+      buttonDiv.className = "buttons-wysiwyg";
 
       // SAVE Content to API
       const saveDeltaBtn = document.createElement("button");
@@ -145,15 +145,14 @@ document.addEventListener("DOMContentLoaded", () => {
       saveDeltaBtn.className = "save-delta";
       saveDeltaBtn.innerText = "SAVE";
       saveDeltaBtn.addEventListener("click", function() {
- 
         const scriptTitle = document.querySelector(".script-title").innerText;
 
         const scriptURL = `http://localhost:3000/scripts`;
 
         // delta variable is what gets saved to the db as a json object
         let delta = quill.root.innerHTML;
-        console.log('scriptTitle: ', scriptTitle);
-        console.log('delta: ', delta);
+        console.log("scriptTitle: ", scriptTitle);
+        console.log("delta: ", delta);
 
         // POST New Script
         fetch(scriptURL, {
@@ -172,41 +171,49 @@ document.addEventListener("DOMContentLoaded", () => {
           })
           .then(script => {
             console.log("script: ", script);
-
           });
-            });
+      });
 
-            const promptBtn = document.createElement("button");
-            promptBtn.innerText = "PROMPT";
-            promptBtn.addEventListener("click", () => {
-              let delta = quill.root.innerHTML;
-              prompt(delta);
-            });
-      
-            // Back to List, No Save to API
-            const backBtn = document.createElement("button");
-            backBtn.innerText = "ⓧ";
-            backBtn.addEventListener("click", function() {
-      
-              fetch(scriptsURL)
-                .then(res => res.json())
-                .then(scriptData => {
-                  slapScriptsOnDom(scriptData);
-                });
-      
-            });
+      const promptBtn = document.createElement("button");
+      promptBtn.innerText = "PROMPT";
+      promptBtn.addEventListener("click", () => {
+        let delta = quill.root.innerHTML;
+        prompt(delta);
+      });
 
-      // Quill Editor Divs     
+      // Back to List, No Save to API
+      const backBtn = document.createElement("button");
+      backBtn.innerText = "ⓧ";
+      backBtn.addEventListener("click", function() {
+        fetch(scriptsURL)
+          .then(res => res.json())
+          .then(scriptData => {
+            slapScriptsOnDom(scriptData);
+          });
+      });
+
+      buttonDiv.append(saveDeltaBtn, promptBtn, backBtn);
+
+      // Quill Editor Divs
       const toolDiv = document.createElement("div");
       toolDiv.id = "toolbar";
       const editorDiv = document.createElement("div");
       editorDiv.id = "editor";
 
-      document.getElementsByClassName("triangle")[0].remove();
-
+      editDiv.append(titleDiv, buttonDiv, toolDiv, editorDiv);
+   
+  
       // Switch the DOM
-      quillDiv.append(titleDiv, saveDeltaBtn, promptBtn, backBtn, toolDiv, editorDiv);
-      body.replaceChild(quillDiv, scriptsDiv);
+      const firstDiv = document.querySelector("div");
+      console.log('firstDiv: ', firstDiv);
+ 
+      if (firstDiv.className === 'scripts-list') {
+       body.replaceChild(editDiv, firstDiv);
+     } else if (firstDiv.id === 'prompt') {
+       body.replaceChild(editDiv, firstDiv);
+     } else {  body.append(editDiv);}
+
+    
 
       // Quill Editor Options and Invoke
       const toolbarOptions = [
@@ -235,8 +242,8 @@ document.addEventListener("DOMContentLoaded", () => {
     function wysiwyg(script) {
       console.log("script: ", script);
 
-      const quillDiv = document.createElement("div");
-      quillDiv.className = "quill-div";
+      const editDiv = document.createElement("div");
+      editDiv.className = "edit-div";
 
       const titleDiv = document.createElement("div");
       titleDiv.className = "script-title";
@@ -249,14 +256,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const editTitle = document.createElement("input");
         editTitle.type = "text";
         editTitle.value = titleDiv.innerText;
-        quillDiv.replaceChild(editTitle, titleDiv);
+        editDiv.replaceChild(editTitle, titleDiv);
         editTitle.addEventListener(
           "keyup",
           function(e) {
             if (e.keyCode === 13) {
               console.log("Return Keyup!"); //
               titleDiv.innerText = editTitle.value;
-              quillDiv.replaceChild(titleDiv, editTitle);
+              editDiv.replaceChild(titleDiv, editTitle);
             }
           },
           false
@@ -267,11 +274,14 @@ document.addEventListener("DOMContentLoaded", () => {
           function(e) {
             console.log("blurred"); //
             titleDiv.innerText = editTitle.value;
-            quillDiv.replaceChild(titleDiv, editTitle);
+            editDiv.replaceChild(titleDiv, editTitle);
           },
           false
         );
       });
+
+      const buttonDiv = document.createElement("div");
+      buttonDiv.className = "buttons-wysiwyg";
 
       const saveDeltaBtn = document.createElement("button");
       saveDeltaBtn.id = script.id;
@@ -299,7 +309,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (quill.root.innerHTML === script.content) {
           console.log("no changes");
           slapScriptsOnDom(scriptData);
-
         } else {
           console.log("their are changes");
 
@@ -344,6 +353,8 @@ document.addEventListener("DOMContentLoaded", () => {
         //   });
       });
 
+      buttonDiv.append(saveDeltaBtn, promptBtn, backBtn);
+
       const toolDiv = document.createElement("div");
       toolDiv.id = "toolbar";
       const editorDiv = document.createElement("div");
@@ -351,17 +362,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // document.getElementById('triangle').remove();
       const firstDiv = document.querySelector("div");
-      console.log('firstDiv: ', firstDiv);
-      
-    
-         if (firstDiv.id === "scripts-list") {
-        quillDiv.append(titleDiv, saveDeltaBtn, promptBtn, backBtn, toolDiv, editorDiv);
-        body.replaceChild(quillDiv, scriptsDiv);
-      } 
-      // else if (firstDiv.id === "prompt") {
-      //   quillDiv.append(titleDiv, saveDeltaBtn, promptBtn, backBtn, toolDiv, editorDiv);
-      //   body.replaceChild(quillDiv, scriptsDiv);
-      // } 
+      console.log("firstDiv: ", firstDiv);
+
+      if (firstDiv.id === "scripts-list") {
+        editDiv.append(
+          titleDiv,
+          buttonDiv,
+          toolDiv,
+          editorDiv
+        );
+        body.replaceChild(editDiv, scriptsDiv);
+      }
 
       // SAVE Content to API
       saveDeltaBtn.addEventListener("click", function(event) {
@@ -421,7 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Prompt scripts
     function prompt(script) {
-      console.log('script: ', script);
+      console.log("script: ", script);
 
       const promptDiv = document.createElement("div");
 
@@ -430,13 +441,14 @@ document.addEventListener("DOMContentLoaded", () => {
       promptDiv.innerHTML = script;
 
       const firstDiv = document.querySelector("div");
-      console.log('firstDiv: ', firstDiv);
+      console.log("firstDiv: ", firstDiv);
 
       if (firstDiv.className === "scripts-list") {
         body.replaceChild(promptDiv, firstDiv);
-      } else if (firstDiv.className === "quill-div") {
+        console.log("from list to prompt");
+      } else if (firstDiv.className === "edit-div") {
         body.replaceChild(promptDiv, firstDiv);
-        console.log('promptDiv: ', promptDiv);
+        console.log("from edit to prompt",);
       }
 
       const triangle = document.createElement("div");
@@ -451,21 +463,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const keyCode = event.code;
         console.log(keyCode);
         if (keyCode === "Enter") {
-        window.scrollBy({
-          top: 20,
-          left: 0,
-          behavior: 'smooth'
-          })
+          window.scrollBy({
+            top: 20,
+            left: 0,
+            behavior: "smooth"
+          });
         }
         if (keyCode === "Escape") {
-          // back to profile
-          wysiwyg(script)
+          // back to edit
+          wysiwyg(script);
+          console.log('script: ', script);
         }
-
       });
-
     }
-
   }
 
   // GETS Speakers from API
