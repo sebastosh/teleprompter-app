@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("Hey John, the DOM is LOADED!"); //
 
-  const scriptsURL = "http://localhost:3000/scripts/";
+  const scriptsURL = "https://cryptic-bayou-72142.herokuapp.com/scripts/";
 
   function slapScriptsOnDom(scriptData) {
     console.log("scriptData: ", scriptData);
@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const scriptId = button.id;
         button.parentElement.remove();
 
-        fetch(`http://localhost:3000/scripts/${scriptId}`, {
+        fetch((scriptsURL + scriptId), {
           method: "DELETE"
         })
           .then(response => {
@@ -147,7 +147,7 @@ document.addEventListener("DOMContentLoaded", () => {
       saveDeltaBtn.addEventListener("click", function() {
         const scriptTitle = document.querySelector(".script-title").innerText;
 
-        const scriptURL = `http://localhost:3000/scripts`;
+        const scriptURL = `https://cryptic-bayou-72142.herokuapp.com/scripts`;
 
         // delta variable is what gets saved to the db as a json object
         let delta = quill.root.innerHTML;
@@ -315,7 +315,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const target = event.target;
           console.log("target: ", target);
 
-          const scriptURL = `http://localhost:3000/scripts/${target.id}`;
+          const scriptURL = `https://cryptic-bayou-72142.herokuapp.com/scripts/${target.id}`;
           const scriptTitle = document.querySelector(".script-title").innerText;
           console.log("scriptTitle: ", scriptTitle);
 
@@ -379,7 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const target = event.target;
         console.log("target: ", target);
 
-        const scriptURL = `http://localhost:3000/scripts/${target.id}`;
+        const scriptURL = `https://cryptic-bayou-72142.herokuapp.com/scripts/${target.id}`;
         const scriptTitle = document.querySelector(".script-title").innerText;
         console.log("scriptTitle: ", scriptTitle);
 

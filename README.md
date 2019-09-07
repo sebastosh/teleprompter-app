@@ -1,3 +1,7 @@
+[Demo](http://teleprompter.sebastiensanzdesantamaria.net/)
+
+[Backend Rails API Server](https://github.com/sebastosh/teleprompter-app-api)
+
 
 ## Teleprompter
 
