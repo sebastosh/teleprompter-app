@@ -1,10 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Hey John, the DOM is LOADED!"); //
-
+ 
   const scriptsURL = "https://cryptic-bayou-72142.herokuapp.com/scripts/";
 
   function slapScriptsOnDom(scriptData) {
-    console.log("scriptData: ", scriptData);
     const body = document.getElementsByTagName("body")[0];
     const scriptsDiv = document.createElement("div");
 
@@ -14,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const newBtn = document.createElement("button");
     newBtn.innerText = "New Script";
     newBtn.addEventListener("click", event => {
-      console.log("wysiwyg for new script"); //
       wysiwygNew();
     });
     scriptsDiv.append(newBtn);
@@ -28,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
       scriptLi.innerText = script.title;
       scriptLi.id = script.id;
       scriptLi.addEventListener("click", event => {
-        console.log(`wysiwyg for ${script.id}`); //
         wysiwyg(script);
       });
       scriptUl.append(scriptLi);
@@ -54,10 +50,8 @@ document.addEventListener("DOMContentLoaded", () => {
           method: "DELETE"
         })
           .then(response => {
-            console.log("response: ", response);
 
             const firstDiv = document.querySelector("div");
-            console.log("firstDiv: ", firstDiv);
 
             fetch(scriptsURL)
               .then(res => res.json())
@@ -69,7 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
           .catch(error => {
             console.error(error);
           });
-        console.log(`Deleted Script #${scriptId}, bye bye.`);
       });
 
       scriptLi.append(promptBtn, deleteBtn);
@@ -81,7 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
     scriptsDiv.append(triangle);
 
     const firstDiv = document.querySelector("div");
-    console.log('firstDiv: ', firstDiv);
  
     if (firstDiv.className === 'enter') {
      body.replaceChild(scriptsDiv, firstDiv);
@@ -90,8 +82,6 @@ document.addEventListener("DOMContentLoaded", () => {
    } else if (firstDiv.className === 'edit-div') {
      body.replaceChild(scriptsDiv, firstDiv);
    } else { body.append(scriptsDiv);}
- 
-    console.log("domSpeaker and scripts Loaded"); //
 
     // POST script to api
     function wysiwygNew() {
@@ -107,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
       // Edit Script Title
       titleDiv.addEventListener("click", function(event) {
         const target = event.target;
-        console.log("Title click"); //
 
         const editTitle = document.createElement("input");
         editTitle.type = "text";
@@ -117,7 +106,6 @@ document.addEventListener("DOMContentLoaded", () => {
           "keyup",
           function(e) {
             if (e.keyCode === 13) {
-              console.log("Return Keyup!"); //
               titleDiv.innerText = editTitle.value;
               editDiv.replaceChild(titleDiv, editTitle);
             }
@@ -128,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
         editTitle.addEventListener(
           "blur",
           function(e) {
-            console.log("blurred"); //
             titleDiv.innerText = editTitle.value;
             editDiv.replaceChild(titleDiv, editTitle);
           },
@@ -151,8 +138,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // delta variable is what gets saved to the db as a json object
         let delta = quill.root.innerHTML;
-        console.log("scriptTitle: ", scriptTitle);
-        console.log("delta: ", delta);
 
         // POST New Script
         fetch(scriptURL, {
@@ -169,9 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
           .then(response => {
             return response.json();
           })
-          .then(script => {
-            console.log("script: ", script);
-          });
       });
 
       const promptBtn = document.createElement("button");
@@ -205,7 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
   
       // Switch the DOM
       const firstDiv = document.querySelector("div");
-      console.log('firstDiv: ', firstDiv);
+      
  
       if (firstDiv.className === 'scripts-list') {
        body.replaceChild(editDiv, firstDiv);
@@ -240,7 +222,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // PATCH script to api
     function wysiwyg(script) {
-      console.log("script: ", script);
+      
 
       const editDiv = document.createElement("div");
       editDiv.className = "edit-div";
@@ -250,8 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
       titleDiv.innerText = `${script.title}`;
       // body.replaceChild(titleDiv, header)
       titleDiv.addEventListener("click", function(event) {
-        const target = event.target;
-        console.log("Title click"); //
 
         const editTitle = document.createElement("input");
         editTitle.type = "text";
@@ -261,7 +241,6 @@ document.addEventListener("DOMContentLoaded", () => {
           "keyup",
           function(e) {
             if (e.keyCode === 13) {
-              console.log("Return Keyup!"); //
               titleDiv.innerText = editTitle.value;
               editDiv.replaceChild(titleDiv, editTitle);
             }
@@ -272,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
         editTitle.addEventListener(
           "blur",
           function(e) {
-            console.log("blurred"); //
+         
             titleDiv.innerText = editTitle.value;
             editDiv.replaceChild(titleDiv, editTitle);
           },
@@ -292,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
       promptBtn.innerText = "PROMPT";
       promptBtn.id = script.id;
       promptBtn.addEventListener("click", event => {
-        console.log(`prompt for ${promptBtn.id}`);
+     
         prompt(script.content);
       });
 
@@ -300,28 +279,20 @@ document.addEventListener("DOMContentLoaded", () => {
       backBtn.innerText = "ⓧ";
       backBtn.id = script.id;
       backBtn.addEventListener("click", function(event) {
-        console.log("event: ", event.target.id);
-        console.log("script: ", script.content);
-        console.log("BACKKKKKKK"); //
-
-        console.log("quill.root.innerHTML: ", quill.root.innerHTML);
+        
 
         if (quill.root.innerHTML === script.content) {
-          console.log("no changes");
+ 
           slapScriptsOnDom(scriptData);
         } else {
-          console.log("their are changes");
-
+          
           const target = event.target;
-          console.log("target: ", target);
-
+         
           const scriptURL = `https://cryptic-bayou-72142.herokuapp.com/scripts/${target.id}`;
           const scriptTitle = document.querySelector(".script-title").innerText;
-          console.log("scriptTitle: ", scriptTitle);
-
+          
           // delta variable is what gets saved to the db as a json object
           const delta = quill.root.innerHTML;
-          console.log("delta: ", delta);
 
           fetch(scriptURL, {
             method: "PATCH",
@@ -336,7 +307,6 @@ document.addEventListener("DOMContentLoaded", () => {
           })
             .then(res => res.json())
             .then(script => {
-              console.log("saved script: ", script);
               fetch(scriptsURL)
                 .then(res => res.json())
                 // .then(res => res.map(speaker => speaker.name))
@@ -345,12 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
             });
         }
-        // fetch(speakersURL + userId)
-        //   .then(res => res.json())
-        //   .then(speaker => {
-        //     // debugger
-        //     domSpeaker(speaker);
-        //   });
       });
 
       buttonDiv.append(saveDeltaBtn, promptBtn, backBtn);
@@ -360,10 +324,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const editorDiv = document.createElement("div");
       editorDiv.id = "editor";
 
-      // document.getElementById('triangle').remove();
       const firstDiv = document.querySelector("div");
-      console.log("firstDiv: ", firstDiv);
-
+  
       if (firstDiv.id === "scripts-list") {
         editDiv.append(
           titleDiv,
@@ -377,15 +339,12 @@ document.addEventListener("DOMContentLoaded", () => {
       // SAVE Content to API
       saveDeltaBtn.addEventListener("click", function(event) {
         const target = event.target;
-        console.log("target: ", target);
 
         const scriptURL = `https://cryptic-bayou-72142.herokuapp.com/scripts/${target.id}`;
         const scriptTitle = document.querySelector(".script-title").innerText;
-        console.log("scriptTitle: ", scriptTitle);
 
         // delta variable is what gets saved to the db as a json object
         const delta = quill.root.innerHTML;
-        console.log("delta: ", delta);
 
         fetch(scriptURL, {
           method: "PATCH",
@@ -399,9 +358,6 @@ document.addEventListener("DOMContentLoaded", () => {
           })
         })
           .then(res => res.json())
-          .then(script => {
-            console.log(script);
-          });
       });
 
       // Quill Editor Options and Invoke
@@ -432,7 +388,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Prompt scripts
     function prompt(script) {
-      console.log("script: ", script);
+      
 
       const promptDiv = document.createElement("div");
 
@@ -441,14 +397,12 @@ document.addEventListener("DOMContentLoaded", () => {
       promptDiv.innerHTML = script;
 
       const firstDiv = document.querySelector("div");
-      console.log("firstDiv: ", firstDiv);
+  
 
       if (firstDiv.className === "scripts-list") {
         body.replaceChild(promptDiv, firstDiv);
-        console.log("from list to prompt");
       } else if (firstDiv.className === "edit-div") {
         body.replaceChild(promptDiv, firstDiv);
-        console.log("from edit to prompt",);
       }
 
       const triangle = document.createElement("div");
@@ -461,7 +415,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       window.addEventListener("keydown", event => {
         const keyCode = event.code;
-        console.log(keyCode);
         if (keyCode === "Enter") {
           window.scrollBy({
             top: 20,
@@ -472,17 +425,15 @@ document.addEventListener("DOMContentLoaded", () => {
         if (keyCode === "Escape") {
           // back to edit
           wysiwyg(script);
-          console.log('script: ', script);
         }
       });
     }
   }
 
-  // GETS Speakers from API
-  //Scripts
+  // GETS Scripts from API
+
   fetch(scriptsURL)
     .then(res => res.json())
-    // .then(res => res.map(speaker => speaker.name))
     .then(scriptData => {
       slapScriptsOnDom(scriptData);
     });
