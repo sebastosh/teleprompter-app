@@ -1,0 +1,21 @@
+{
+  "name": "teleprompter-app",
+  "version": "1.0.0",
+  "description": "[Demo](http://teleprompter.sebastiensanzdesantamaria.net/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sebastosh/teleprompter-app.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sebastosh/teleprompter-app/issues"
+  },
+  "homepage": "https://github.com/sebastosh/teleprompter-app#readme"
+
+}
