@@ -29,13 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       scriptUl.append(scriptLi);
 
-      // Prompt Script Button
-      const promptBtn = document.createElement("button");
-      promptBtn.innerText = "Prompt";
-      promptBtn.id = script.id;
-      promptBtn.addEventListener("click", event => {
-        prompt(script.content);
-      });
+      // // Prompt Script Button
+      // const promptBtn = document.createElement("button");
+      // promptBtn.innerText = "Prompt";
+      // promptBtn.id = script.id;
+      // promptBtn.addEventListener("click", event => {
+      //   prompt(script.content);
+      // });
 
       // Delete Script Button
       const deleteBtn = document.createElement("button");
@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
       });
 
-      scriptLi.append(promptBtn, deleteBtn);
+      scriptLi.append( deleteBtn);
     });
 
     const triangle = document.createElement("div");
@@ -222,8 +222,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // PATCH script to api
     function wysiwyg(script) {
+      console.log('script: ', script);
       
-
+      
       const editDiv = document.createElement("div");
       editDiv.className = "edit-div";
 
@@ -272,7 +273,8 @@ document.addEventListener("DOMContentLoaded", () => {
       promptBtn.id = script.id;
       promptBtn.addEventListener("click", event => {
      
-        prompt(script.content);
+        // prompt(script.content);
+        prompt(script);
       });
 
       const backBtn = document.createElement("button");
@@ -284,6 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (quill.root.innerHTML === script.content) {
  
           slapScriptsOnDom(scriptData);
+          
         } else {
           
           const target = event.target;
@@ -325,16 +328,42 @@ document.addEventListener("DOMContentLoaded", () => {
       editorDiv.id = "editor";
 
       const firstDiv = document.querySelector("div");
+      console.log('firstDiv: ', firstDiv);
   
       if (firstDiv.id === "scripts-list") {
+        while (document.getElementsByClassName('triangle')[0]) {
+          document.getElementsByClassName('triangle')[0].remove();
+      }
         editDiv.append(
           titleDiv,
           buttonDiv,
           toolDiv,
           editorDiv
         );
-        body.replaceChild(editDiv, scriptsDiv);
+        body.replaceChild(editDiv, firstDiv);
+      } else if (firstDiv.id === 'prompt') {
+
+        while (document.getElementsByClassName('triangle')[0]) {
+          document.getElementsByClassName('triangle')[0].remove();
       }
+        editDiv.append(
+          titleDiv,
+          buttonDiv,
+          toolDiv,
+          editorDiv
+        );
+        body.replaceChild(editDiv, firstDiv);
+    }
+      
+
+      // if (firstDiv.className === 'scripts-list') {
+      //   body.replaceChild(editDiv, firstDiv);
+      // } else if (firstDiv.id === 'prompt') {
+      //   body.replaceChild(editDiv, firstDiv);
+      // } else if (firstDiv.className === 'edit-div') {
+      //   body.replaceChild(editDiv, firstDiv);
+      // } else { body.append(editDiv);}
+   
 
       // SAVE Content to API
       saveDeltaBtn.addEventListener("click", function(event) {
@@ -388,13 +417,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Prompt scripts
     function prompt(script) {
+      console.log('script: ', script);
       
 
       const promptDiv = document.createElement("div");
 
       promptDiv.id = "prompt";
       promptDiv.className = "prompt";
-      promptDiv.innerHTML = script;
+      promptDiv.innerHTML = script.content;
 
       const firstDiv = document.querySelector("div");
   
@@ -425,6 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (keyCode === "Escape") {
           // back to edit
           wysiwyg(script);
+          console.log('script: ', script);
         }
       });
     }
