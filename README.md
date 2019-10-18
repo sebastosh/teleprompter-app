@@ -1,4 +1,4 @@
-[Demo](http://teleprompter.sebastiensanzdesantamaria.net/)
+[Demo](https://serene-jackson-8a61ec.netlify.com/)
 
 [Backend Rails API Server](https://github.com/sebastosh/teleprompter-app-api)
 
